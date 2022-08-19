@@ -20,7 +20,7 @@ theMain.appendChild(mainDiv);
 
 async function meteo(event){
 
-    const weat = await fetch (`http://api.openweathermap.org/data/2.5/weather?q=${event}&appid=d0170950f748b7c8700a8d0ec061faec&units=${units[2]}`) ;
+    const weat = await fetch (`https://api.openweathermap.org/data/2.5/weather?q=${event}&appid=d0170950f748b7c8700a8d0ec061faec&units=${units[2]}`) ;
     const repWeat = await weat.json();
     const newArticle = document.createElement("article");
     newArticle.classList.add(`card`);
