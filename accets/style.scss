@@ -1,1 +1,7 @@
-@import "styleImport/_variable";
+@import "styleImport/_variable","styleImport/_styleCard";
+.album{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
