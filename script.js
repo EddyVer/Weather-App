@@ -85,7 +85,7 @@ async function countryList(){
         listCity.appendChild(optList);
     }
 }
-
+countryList();
 //create card weather
 async function meteo(event){
 
@@ -246,7 +246,7 @@ function humidity(humi){
     humiSect.classList.add("sectHumidity");
 
     const imgGoute = document.createElement("img");
-    imgGoute.src = "/accets/img/weather-drop-svgrepo-com.svg"
+    imgGoute.src = "accets/img/weather-drop-svgrepo-com.svg"
     imgGoute.alt = "image drop of rain";
     humiSect.appendChild(imgGoute);
 
