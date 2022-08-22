@@ -2,6 +2,45 @@
 .album{
     margin-top: 30px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
 }
+#city{
+    margin-top: 2px;
+    border: 2px solid gray;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width:auto;
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: small;
+}
+li:hover{
+    background-color: rgb(169, 169, 169);
+}
+.aInput{
+    justify-items: flex-start;
+    align-self: flex-start;
+    padding: 10px 5px;
+    width: auto;
+    border-radius: 2px;
+}
+.aButton{
+    justify-self: flex-start;
+    align-self: center;
+}
+.divInput{
+    display:grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 20% 80%;
+}
+// @media only screen and(min-width:1024px) {
+//     .album{
+//         display: flex;
+//         flex-direction: row;
+//         flex-wrap: wrap;
+//     }      
+// }

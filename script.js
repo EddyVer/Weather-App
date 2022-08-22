@@ -1,30 +1,79 @@
 let units = ["imperial","standard","metric"];
-//fetch(`/api.teleport.org/api/cities/?search=${userInput}`);
 
-const city = "london";
+
+
 const theMain = document.querySelector("main");
 const mainDiv = document.createElement("div");
 mainDiv.classList.add("contenant");
+
+const divInput = document.createElement("div");
+divInput.classList.add("divInput");
+
 const aInput = document.createElement("input");
 aInput.classList.add("aInput");
-aInput.value="charleroi";
-mainDiv.appendChild(aInput);
+aInput.value="";
+divInput.appendChild(aInput);
 const but = document.createElement("button");
 but.classList.add("aButton");
-but.innerText = "country";
-mainDiv.appendChild(but);
+but.innerText = "confirm";
+divInput.appendChild(but);
+const list = document.createElement("ul");
+list.setAttribute("id","city");
+divInput.appendChild(list);
+
+mainDiv.appendChild(divInput);
+
+
+
+const butFavo = document.createElement("button");
+butFavo.innerText = "Favori";
+butFavo.classList.add("favo");
+mainDiv.appendChild(butFavo);
+
+
+
 const sect = document.createElement("section");
 sect.classList.add("album");
 mainDiv.appendChild(sect);
 theMain.appendChild(mainDiv);
 
+//create list seletion
+async function countryList(){
+    const listCity = document.querySelector("#city");
+    const valueInput = document.querySelector(".aInput");
+    if(!valueInput.value){
+        while (listCity.firstChild){
+            listCity.removeChild(listCity.lastChild);
+        }
+        return;
+    }
+    while (listCity.firstChild){
+        listCity.removeChild(listCity.lastChild);
+    }
+     const listCountry = await fetch(`https://api.teleport.org/api/cities/?search=${valueInput.value}`);
+    const repListCountry = await listCountry.json();
+    
+    for(let i = 0; i < repListCountry._embedded["city:search-results"].length; i++ ){
+        const fullNameCity = repListCountry._embedded["city:search-results"][i].matching_full_name;
+        const optList = document.createElement("li");
+        optList.innerText=fullNameCity;
+        listCity.appendChild(optList);
+    }
+}
+
+//create card weather
 async function meteo(event){
 
-    const weat = await fetch (`http://api.openweathermap.org/data/2.5/weather?q=${event}&appid=d0170950f748b7c8700a8d0ec061faec&units=${units[2]}`) ;
+    const weat = await fetch (`https://api.openweathermap.org/data/2.5/weather?q=${event}&appid=d0170950f748b7c8700a8d0ec061faec&units=${units[2]}`) ;
     const repWeat = await weat.json();
     const newArticle = document.createElement("article");
+    switch(repWeat.weather[0].main){
+        case "Clear": newArticle.classList.add("clear"); break;
+        default:newArticle.classList.add("cloudy"); break;
+    }
     newArticle.classList.add(`card`);
-    newArticle.appendChild(paragCity(repWeat.sys.country,repWeat.name));
+    newArticle.appendChild(paragCity(repWeat.name));
+    newArticle.appendChild(paraCountry(repWeat.sys.country));
     newArticle.appendChild(setImg(repWeat.weather[0].main));
     newArticle.appendChild(setTemp(repWeat.main.temp));
     newArticle.appendChild(tempMinMax(repWeat.main.temp_min,repWeat.main.temp_max,repWeat.main.feels_like));
@@ -33,18 +82,29 @@ async function meteo(event){
     if(repWeat.main.temp <= 4 && repWeat.main.temp >= 27){
         newArticle.appendChild(iconAlert(repWeat.main.temp));
     }
-
     if(repWeat.main.temp >= 20 && repWeat.main.temp <= 27){
         newArticle.appendChild(addIcon());
     }
-    //console.log();
+    
+    newArticle.appendChild(setImgFavo());
+    newArticle.appendChild(setimgRub());
+    
     sect.appendChild(newArticle);
+    eventImgFavo();
+    eventSupCard();
+}
+function paraCountry(country){
+    const p =document.createElement("p");
+    p.classList.add("paraCount");
+    p.innerText = `${country}`;
+    return p;
+
 }
 
-function paragCity(country,city){
+function paragCity(city){
     const p = document.createElement("p");
     p.classList.add("paraCity");
-    p.innerText = `${city}, ${country}`;
+    p.innerText = `${city}`;
     return p;
 }
 
@@ -52,12 +112,13 @@ function paragCity(country,city){
 function setImg(weatherStatu){
     const picture = document.createElement("img");
     picture.classList.add("imgWeather");
+   
     switch(weatherStatu){
         case "Clear": picture.src = "accets/img/sunny-weather-svgrepo-com.svg";
                 picture.alt= "Icon weather clear.";
          break;
         case "Clouds":picture.src = "accets/img/cloudy-weather-svgrepo-com(1).svg";
-                picture.alt= "Icon weather cloud.";
+                picture.alt= "Icon weather cloud.";     
          break;
         case "Rain": picture.src = "accets/img/weather-rain-showers-day-svgrepo-com.svg";
                 picture.alt= "Icon weather rain.";
@@ -169,6 +230,82 @@ function humidity(humi){
 
     return humiSect;
 }
+
+function setImgFavo(){
+    const imgFavo = document.createElement("img");
+    imgFavo.classList.add("imgFavo");
+    imgFavo.src = "accets/img/[CITYPNG.COM]HD Square Black Heart Love Icon PNG - 1146x1147.png",
+    imgFavo.alt = "image Heart";
+    return imgFavo;
+}
+function setimgRub(){
+    const imgRub = document.createElement("img");
+    imgRub.classList.add("rubbish");
+    imgRub.src = "accets/img/kisspng-rubbish-bins-waste-paper-baskets-recycling-bin-c-5b3928a0a4b678.2952609415304726086747.png";
+    imgRub.alt = "emote rubbish";
+    return imgRub;
+}
+
+
+// call same time create img. Add or remove favori
+function eventImgFavo(){
+    const favoImg = document.getElementsByClassName("imgFavo");
+
+    for(let item of favoImg){
+        item.addEventListener("click", (item) => {
+            const test = item.target.parentNode.querySelector(".paraCity");
+            if(localStorage.length == 1){
+                alert("only one favori pls");
+                confirm("do you want to remove your favori ?")? clearStorage() : 0;
+                return;
+            }
+            addItemStorage(test.innerText);
+
+        })
+    };
+}
+
+function eventSupCard(){
+    const imgDel = document.getElementsByClassName("rubbish");
+    
+    for(let item of imgDel){
+        item.addEventListener("click", (item) => {
+            const parentImgDel = item.target.parentNode;
+            let grandParent = parentImgDel.parentNode;
+            if(parentImgDel == grandParent.firstChild){
+                grandParent.removeChild(grandParent.firstChild);
+                 return;
+            }
+            else{grandParent.removeChild(parentImgDel);}
+           
+        })
+    }
+}
+
+function showFavori(){
+    const butFavori = document.querySelector(".favo");
+    butFavori.addEventListener("click", () => {
+        if(!localStorage.getItem("name")){
+            alert("You don't have favori");
+            return;
+        }
+        meteo(localStorage.getItem("name"));
+    });
+}
+
+
+
+function addItemStorage (item) {
+    localStorage.setItem("name", `${item}`);
+}
+
+function clearStorage(){
+    localStorage.clear();
+}
+
+console.log(localStorage);
+
+
 const findBut = document.querySelector(".aButton");
 const findInput = document.querySelector(".aInput");
 
@@ -177,20 +314,21 @@ findInput.addEventListener("keyup",(event) => {
     if(event.key == "Enter"){
         meteo(findInput.value);
     }
+    else{
+        countryList()
+    }
 });
 
+const cityList = document.querySelector("#city");
+cityList.addEventListener("click", (event) => {
+    const valInput = document.querySelector(".aInput");
+    valInput.value = event.target.innerText;
+});
 
+document.addEventListener("keyup",(event) => {
+        if(event.key == "Enter"){
+            meteo(findInput.value);
+        }
+});
 
-
-
-function addItemStorage (item) {
-  let listName = JSON.parse(localStorage.getItem("name", "[]"));
-  listName.push(item);
-  localStorage.setItem("name", JSON.stringify(listName));
-}
-function getAllItems () {
-  return JSON.parse(localStorage.getItem("name", "[]"));
-}
-function clearStorage(){
-    localStorage.clear();
-}
+showFavori();
