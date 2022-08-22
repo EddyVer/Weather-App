@@ -42,7 +42,7 @@ theMain.appendChild(mainDiv);
 
 async function meteo(event){
 
-    const weat = await fetch (`https://api.openweathermap.org/data/2.5/weather?q=${event}&appid=d0170950f748b7c8700a8d0ec061faec&units=${units[2]}`) ;
+    const weat = await fetch (`http://api.openweathermap.org/data/2.5/weather?q=${event}&appid=d0170950f748b7c8700a8d0ec061faec&units=${units[2]}`) ;
     const repWeat = await weat.json();
     const newArticle = document.createElement("article");
     newArticle.classList.add(`card`);
@@ -85,7 +85,7 @@ async function countryList(){
         listCity.appendChild(optList);
     }
 }
-countryList();
+
 //create card weather
 async function meteo(event){
 
@@ -330,45 +330,7 @@ function clearStorage(){
 }
 
 
-function addIcon(){
-    const imgIcon = document.createElement("img");
-    imgIcon.classList.add("icon");
-    imgIcon.src = "accets/img/pngwing.com.png";
-    imgIcon.alt = "Icon biker";
-    return imgIcon;
-}
-function iconAlert(temp){
-    if(temp < 4){
-        const imgCold = document.createElement("img");
-        imgCold.classList.add("imgAlert");
-        imgCold.src = "accets/img/forecast-thermometer-weather-temperature-winter-cold-svgrepo-com.svg";
-        imgCold.alt = "";
-        return imgCold;
-    }
-    if(temp > 27){
-        const imgWarm = document.createElement("img");
-        imgWarm.classList.add("imgAlert");
-        imgWarm.src = "accets/img/tforecast-hermometer-weather-temperature-summer-hot-svgrepo-com.svg";
-        imgWarm.alt = "";
-        return imgWarm;
-    }
-}
 
-function humidity(humi){
-    const humiSect = document.createElement("section");
-    humiSect.classList.add("sectHumidity");
-
-    const imgGoute = document.createElement("img");
-    imgGoute.src = "/accets/img/weather-drop-svgrepo-com.svg"
-    imgGoute.alt = "image drop of rain";
-    humiSect.appendChild(imgGoute);
-
-    const p = document.createElement("p");
-    p.innerText = `${humi}%`;
-    humiSect.appendChild(p);
-
-    return humiSect;
-}
 const findBut = document.querySelector(".aButton");
 const findInput = document.querySelector(".aInput");
 
@@ -377,6 +339,7 @@ findInput.addEventListener("keyup",(event) => {
     if(event.key == "Enter"){
         meteo(findInput.value);
     }
+    else{countryList();}
 });
 
 
@@ -399,6 +362,7 @@ document.addEventListener("keyup",(event) => {
         if(event.key == "Enter"){
             meteo(findInput.value);
         }
+
 });
 
 showFavori();
