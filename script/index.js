@@ -1,4 +1,7 @@
-import {meteo} from './accetsScript/creationCard.js';
+import {meteo} from "./accetsScript/creationCard.js";
+import{supAllChild} from "./utils/removeChild.js";
+let units = ["imperial","standard","metric"];
+const keyUser = "d0170950f748b7c8700a8d0ec061faec";
 
 const theMain = document.querySelector("main");
 
@@ -10,7 +13,6 @@ divInput.classList.add("divInput");
 
 const mainInput = document.createElement("input");
 mainInput.classList.add("aInput");
-mainInput.value="";
 divInput.appendChild(mainInput);
 
 const butConfirm = document.createElement("button");
@@ -35,14 +37,10 @@ mainDiv.appendChild(sectionAlbum);
 theMain.appendChild(mainDiv);
 
 //let testModule = meteo(mainInput.value,sectionAlbum,units);
-function supAllChild(parent){
-    while (parent.firstChild){
-        parent.removeChild(parent.lastChild);
-    }
-}
+
 
 //create list seletion
-async function countryList(){
+async function countryList(list,input){
     const listCity = document.querySelector("#city");
     const valueInput = document.querySelector(".aInput");
     if(!valueInput.value){
@@ -60,48 +58,44 @@ async function countryList(){
         listCity.appendChild(optList);
     }
 }
+
 const album = document.querySelector(".album");
-function eventButInputMain(){
-    // const butConfirm = document.querySelector(".aButton");
-    // const mainInput = document.querySelector(".aInput");
-    butConfirm.addEventListener("click", () => { 
-        meteo(mainInput.value,album); 
+const cityList = document.querySelector("#city");
+const butFavori = document.querySelector(".favo");
+
+function eventButInputMain(parent,input,button,key,valueUnit){
+    button.addEventListener("click", () => { 
+        meteo(input.value,parent,key,valueUnit[2]); 
+        input.value="";
     });
-    mainInput.addEventListener("keyup",(event) => {
-        if(event.key == "Enter"){
-           // meteo(mainInput.value,album);
-        }
-        else{countryList();}
-    });
+    input.addEventListener("keyup", countryList)
 }
 
 
-function eventListUl(){
-    const cityList = document.querySelector("#city");
-    cityList.addEventListener("click", (event) => {
-        const valInput = document.querySelector(".aInput");
-        valInput.value = event.target.innerText;
+function eventListUl(input,list){
+     list.addEventListener("click", (event) => {
+        input.value = event.target.innerText;
     });
 }
 
-function docEvent(){
+function docEvent(parent,input,key,valueUnit){
     document.addEventListener("keyup",(event) => {
         if(event.key == "Enter"){
-            meteo(mainInput.value,album);
+            meteo(input.value,parent,key,valueUnit[2]);
+            input.value="";
         }
     });
 }
-function showFavori(){
-    const butFavori = document.querySelector(".favo");
-    butFavori.addEventListener("click", () => {
+function showFavori(parent,button,key,valueUnit){
+   button.addEventListener("click", () => {
         if(!localStorage.getItem("name")){
             alert("You don't have favori");
             return;
         }
-        meteo(localStorage.getItem("name"));
+        meteo(localStorage.getItem("name"),parent,key,valueUnit[2]);
     });
 }
-eventButInputMain();
-eventListUl();
-docEvent();
-showFavori();
+eventButInputMain(album,mainInput,butConfirm,keyUser,units);
+eventListUl(mainInput,cityList);
+docEvent(album,mainInput,keyUser,units);
+showFavori(album,butFavori,keyUser,units);

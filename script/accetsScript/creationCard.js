@@ -1,7 +1,13 @@
-let units = ["imperial","standard","metric"];
-//create card weather with api openWeather
-export async function meteo(event,parent){
-    const weat = await fetch (`https://api.openweathermap.org/data/2.5/weather?q=${event}&appid=d0170950f748b7c8700a8d0ec061faec&units=${units[2]}`) ;
+import { roundNumber } from "../utils/roudnNumb";
+/**
+ * create card weather with api openWeather
+ * @param {string} city 
+ * @param {parentHTML} parent 
+ * @param {string} keyUser 
+ * @param {string} units 
+ */
+export async function meteo(city,parent,keyUser,units){
+    const weat = await fetch (`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${keyUser}&units=${units}`) ;
     const repWeat = await weat.json();
     const articleNewCard = document.createElement("article");
     addClassCard(repWeat.weather[0].main,articleNewCard);
@@ -17,9 +23,8 @@ export async function meteo(event,parent){
     if(repWeat.main.temp <= 4 && repWeat.main.temp >= 27){
         articleNewCard.appendChild(iconAlert(repWeat.main.temp));
     }
-    if(repWeat.main.temp >= 20 && repWeat.main.temp <= 27){
-        articleNewCard.appendChild(addIcon());
-    }
+
+    addIcon(repWeat.main.temp,articleNewCard);
     articleNewCard.appendChild(setImgFavo());
     articleNewCard.appendChild(setimgRub());
     
@@ -29,12 +34,18 @@ export async function meteo(event,parent){
    
 }
 
-function addClassCard(statuWeather,learn){
+function addClassCard(statuWeather,learner){
     switch(statuWeather){
-        case "Clear": learn.classList.add("clear"); break;
-        default:learn.classList.add("cloudy"); break;
+        case "Clear": learner.classList.add("clear"); break;
+        default:learner.classList.add("cloudy"); break;
     }
 }
+
+/**
+ * set paragraph with country
+ * @param {string} country 
+ * @returns html paragraph
+ */
 function paraCountry(country){
     const p =document.createElement("p");
     p.classList.add("paraCount");
@@ -42,6 +53,11 @@ function paraCountry(country){
     return p;
 }
 
+/**
+ * set paragraph with city name
+ * @param {string} city 
+ * @returns html paragraph
+ */
 function paragCity(city){
     const p = document.createElement("p");
     p.classList.add("paraCity");
@@ -49,8 +65,13 @@ function paragCity(city){
     return p;
 }
 
-//set picture weather(add of more variation later)
-function setImg(weatherStatu){
+/**
+ * 
+ * @param {string} weatherStatu 
+ * @returns html img
+ */
+function setImg(weatherStatu){ //(add of more variation later)
+  
     const picture = document.createElement("img");
     picture.classList.add("imgWeather");
    
@@ -77,6 +98,11 @@ function setImg(weatherStatu){
     return picture;
 }
 
+/**
+ * 
+ * @param {int} temp 
+ * @returns html paragraph
+ */
 function setTemp(temp){
     const p =document.createElement("p");
     p.classList.add("paraTemp");
@@ -84,6 +110,13 @@ function setTemp(temp){
     return p;
 }
 
+/**
+ * 
+ * @param {int} tempMin 
+ * @param {int} tempMax 
+ * @param {int} tempfeel 
+ * @returns html paragraph
+ */
 function tempMinMax(tempMin,tempMax,tempfeel){
     const paragrtempMInMax = document.createElement("p");
     paragrtempMInMax.classList.add("tempMm")
@@ -91,12 +124,13 @@ function tempMinMax(tempMin,tempMax,tempfeel){
     return paragrtempMInMax;
 }
 
-function roundNumber(number){
-    const finalNumber =  number.toFixed(0);
-    return finalNumber;
-}
-//set sunSet and sunRice on the card (time not good for other country)
-function sunSetRice(sunSet,sunRice){
+/**
+ * set sunSet and sunRice article
+ * @param {date} sunSet 
+ * @param {date} sunRice 
+ * @returns html article
+ */
+function sunSetRice(sunSet,sunRice){//(time not good for other country)
     const set = new Date(sunSet*1000);
     const rice = new Date(sunRice*1000);
     const artSet = document.createElement("section");
@@ -109,7 +143,7 @@ function sunSetRice(sunSet,sunRice){
     secRice.appendChild(riceImg);
     const paraHourRice = document.createElement("p");
     paraHourRice.classList.add("noMarg");
-    paraHourRice.innerText = `${rice.getHours()}:${numberHourFull(rice.getMinutes())}`;
+    paraHourRice.innerText = `${rice.getHours()}:${numberMinFull(rice.getMinutes())}`;
     secRice.appendChild(paraHourRice);
     artSet.appendChild(secRice)
 
@@ -121,23 +155,26 @@ function sunSetRice(sunSet,sunRice){
     secSet.appendChild(setImg);
     const paraHourSet = document.createElement("p");
     paraHourSet.classList.add("noMarg");
-    paraHourSet.innerText = `${set.getHours()}:${numberHourFull(set.getMinutes())}`;
+    paraHourSet.innerText = `${set.getHours()}:${numberMinFull(set.getMinutes())}`;
     secSet.appendChild(paraHourSet);
     artSet.appendChild(secSet);
     return artSet;
 }
 
-function numberHourFull(number){
+function numberMinFull(number){
     return String(number).padStart(2,"0");
 }
 
 // for fun add icon bike 
-function addIcon(){
-    const imgIcon = document.createElement("img");
-    imgIcon.classList.add("icon");
-    imgIcon.src = "accets/img/pngwing.com.png";
-    imgIcon.alt = "Icon biker";
-    return imgIcon;
+function addIcon(temp,parent){
+    if(temp >= 20 && temp <= 27){
+        const imgIcon = document.createElement("img");
+        imgIcon.classList.add("icon");
+        imgIcon.src = "accets/img/pngwing.com.png";
+        imgIcon.alt = "Icon biker";
+        parent.appendChild(imgIcon);
+    }
+    return;
 }
 function iconAlert(temp){
     if(temp < 4){
@@ -224,10 +261,10 @@ function eventSupCard(){
 
 function addItemStorage (item) {
     localStorage.setItem("name", `${item}`);
-  }
+}
   
   function clearStorage(){
       localStorage.clear();
-  }
+}
 
  
