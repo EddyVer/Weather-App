@@ -1,4 +1,5 @@
-import { roundNumber } from "../utils/roudnNumb";
+import { roundNumber } from "../utils/roudnNumb.js";
+import { numberFull } from "../utils/setFullNumb.js";
 /**
  * create card weather with api openWeather
  * @param {string} city 
@@ -143,7 +144,7 @@ function sunSetRice(sunSet,sunRice){//(time not good for other country)
     secRice.appendChild(riceImg);
     const paraHourRice = document.createElement("p");
     paraHourRice.classList.add("noMarg");
-    paraHourRice.innerText = `${rice.getHours()}:${numberMinFull(rice.getMinutes())}`;
+    paraHourRice.innerText = `${rice.getHours()}:${numberFull(rice.getMinutes())}`;
     secRice.appendChild(paraHourRice);
     artSet.appendChild(secRice)
 
@@ -155,15 +156,13 @@ function sunSetRice(sunSet,sunRice){//(time not good for other country)
     secSet.appendChild(setImg);
     const paraHourSet = document.createElement("p");
     paraHourSet.classList.add("noMarg");
-    paraHourSet.innerText = `${set.getHours()}:${numberMinFull(set.getMinutes())}`;
+    paraHourSet.innerText = `${set.getHours()}:${numberFull(set.getMinutes())}`;
     secSet.appendChild(paraHourSet);
     artSet.appendChild(secSet);
     return artSet;
 }
 
-function numberMinFull(number){
-    return String(number).padStart(2,"0");
-}
+
 
 // for fun add icon bike 
 function addIcon(temp,parent){
