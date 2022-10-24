@@ -9,7 +9,7 @@ Enough is enough, you decide to build a small web application for them so that y
 
 #### 🌱 Must haves
 
--   In the home page the user can enter the city of their choice (think of the right HTML elements here)
+-   In the home page the user can enter the city of their choice 
 -   On clicking the SUBMIT button or pressing ENTER the application will display the weather for the next 5 days
 
 > 💡 Not sure where to start? Split this features into multiple smaller todos (in your code, sketch, ...)
@@ -19,7 +19,7 @@ Enough is enough, you decide to build a small web application for them so that y
 -   Remember the user choice on subsequent visits
 -   Allow the user to compare the weather in multiple cities simultaneously
 -   Use the API of https://unsplash.com/ to show a photo of the city they entered in the form.
--   Display a line graph of temperature over time using a library such as [Chart.js](https://www.chartjs.org)
+-   Display a line graph of temperature over time using a library such as Chart.js
 
 ### link
 <a href = "https://eddyver.github.io/Weather-App/"> Acces to Weather App </a>
